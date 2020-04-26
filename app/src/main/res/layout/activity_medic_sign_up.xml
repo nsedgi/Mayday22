@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DDF2FA"
+    tools:context=".MedicSignUpActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="הרשמה"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.084" />
+
+    <Button
+        android:id="@+id/signUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="104dp"
+        android:text="הרשמה"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="369dp"
+        android:layout_height="342dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/signUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.745">
+
+        <TextView
+            android:id="@+id/IdBlank"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="תעודת זהות" />
+
+        <EditText
+            android:id="@+id/id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:inputType="number"
+            android:maxEms="9" />
+
+        <TextView
+            android:id="@+id/passwordBlank"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="סיסמה" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/nameBlank"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="שם מלא" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/pictureBlank"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="העלאת צילום תעודת זהות" />
+
+        <Button
+            android:id="@+id/uploadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="העלאה" />
+
+        <TextView
+            android:id="@+id/orgBlank"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="שדה רשות - ארגון"
+            android:textAlignment="viewEnd" />
+
+        <EditText
+            android:id="@+id/organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

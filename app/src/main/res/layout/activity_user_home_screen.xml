@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DDF2FA"
+    tools:context=".UserHomeScreenActivity">
+
+    <ImageView
+        android:id="@+id/panicButton"
+        android:layout_width="305dp"
+        android:layout_height="291dp"
+        android:contentDescription="לחצן מצוקה"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.143"
+        app:srcCompat="@drawable/panic" />
+
+    <TextView
+        android:id="@+id/panicBlank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="לחצן מצוקה"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/panicButton"
+        app:layout_constraintEnd_toEndOf="@+id/panicButton"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/panicButton"
+        app:layout_constraintTop_toTopOf="@+id/panicButton" />
+
+    <LinearLayout
+        android:id="@+id/horizontalLayout"
+        android:layout_width="319dp"
+        android:layout_height="31dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/panicButton"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/dial"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="חיוג ידני למוקד חירום"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/dial2"
+            android:layout_width="62dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@android:drawable/ic_menu_call" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="351dp"
+        android:layout_height="226dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalLayout"
+        app:layout_constraintVertical_bias="0.184">
+
+        <EditText
+            android:id="@+id/medInfo"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:text="מידע רפואי" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/logOutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="התנתק" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

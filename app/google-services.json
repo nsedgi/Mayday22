@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "89840620216",
+    "firebase_url": "https://mayday22-2856c.firebaseio.com",
+    "project_id": "mayday22-2856c",
+    "storage_bucket": "mayday22-2856c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89840620216:android:eda7a9efdc6f9106445a4d",
+        "android_client_info": {
+          "package_name": "com.example.mayday22"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "89840620216-laikcsb80rl6kfpvthdq9dsuhen21qs9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLcdXE1Fe-B8fQUd7y3fOvbGo4U1aQNMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "89840620216-laikcsb80rl6kfpvthdq9dsuhen21qs9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
