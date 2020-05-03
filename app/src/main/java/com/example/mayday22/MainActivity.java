@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void validatePassword(String idTemp) {
+    private void validatePassword(final String idTemp) {
         final String passwordTemp = password.getText().toString();
         uDatabase.child(idTemp).child(passwordTemp).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "ברוך הבא", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.INVISIBLE);
                     signIn.setVisibility(View.VISIBLE);
-                    moveActivity();
+                    moveActivity(idTemp, passwordTemp);
                 }
                 else{
                     progressBar.setVisibility(View.INVISIBLE);
@@ -189,8 +189,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(signUpMedic);
         }
     }
-    public void moveActivity(){
+    public void moveActivity(String idTemp, String passwordTemp){
         Intent moveToHomeScreen =  new Intent(this, UserHomeScreenActivity.class);
+        moveToHomeScreen.putExtra("lastId", idTemp);
+        moveToHomeScreen.putExtra("lastPassword", passwordTemp);
         startActivity(moveToHomeScreen);
     }
     public void moveActivityMedic(){

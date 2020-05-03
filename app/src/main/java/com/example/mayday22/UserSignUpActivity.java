@@ -86,12 +86,15 @@ public class UserSignUpActivity extends AppCompatActivity {
             mDatabase.child(idTemp).child(passwordTemp).setValue(newUser);
 
             Toast.makeText(getApplicationContext(), "נתונים נשמרו בהצלחה!", Toast.LENGTH_LONG).show();
-            moveActivity();
+            moveActivity(idTemp, passwordTemp, nameTemp);
         }
     }
 
-    public void moveActivity(){
+    public void moveActivity(String idTemp, String passwordTemp, String nameTemp){
         Intent moveToHomeScreen =  new Intent(UserSignUpActivity.this, UserHomeScreenActivity.class);
+        moveToHomeScreen.putExtra("lastId", idTemp);
+        moveToHomeScreen.putExtra("lastPassword", passwordTemp);
+        moveToHomeScreen.putExtra("lastName", nameTemp);
         startActivity(moveToHomeScreen);
         UserSignUpActivity.this.finish();
     }
