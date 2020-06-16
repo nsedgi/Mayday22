@@ -1,7 +1,7 @@
 package com.example.mayday22;
 
 public class Medic {
-    private String Id, name, password, organization;
+    private String Id, name, password, organization, idUrl;
 
     public String getId() {
         return Id;
@@ -9,6 +9,14 @@ public class Medic {
 
     public void setId(String id) {
         Id = id;
+    }
+
+    public String getIdUrl() {
+        return idUrl;
+    }
+
+    public void setIdUrl(String idUrl) {
+        this.idUrl = idUrl;
     }
 
     public String getName() {

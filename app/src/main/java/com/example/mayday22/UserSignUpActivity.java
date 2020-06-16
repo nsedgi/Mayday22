@@ -16,9 +16,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class UserSignUpActivity extends AppCompatActivity {
     private DatabaseReference mDatabase, checkUser;
+
     private EditText userName, name, password, medInfo;
     private Button signUp;
     private User newUser = new User();
@@ -32,8 +35,10 @@ public class UserSignUpActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         medInfo = findViewById(R.id.info3);
         signUp = findViewById(R.id.signUp3);
+
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         checkUser = FirebaseDatabase.getInstance().getReference();
+
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +48,7 @@ public class UserSignUpActivity extends AppCompatActivity {
 
 
         });
+
     }
 
 
@@ -98,5 +104,6 @@ public class UserSignUpActivity extends AppCompatActivity {
         startActivity(moveToHomeScreen);
         UserSignUpActivity.this.finish();
     }
+
 
 }

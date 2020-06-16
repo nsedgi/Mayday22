@@ -91,7 +91,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
     }
     public void distressCall(){
-        Intent moveToDistressCall =  new Intent(this, DistressUserActivity.class);
+        Intent moveToDistressCall =  new Intent(this, UserDistressActivity.class);
         startActivity(moveToDistressCall);
 
     }

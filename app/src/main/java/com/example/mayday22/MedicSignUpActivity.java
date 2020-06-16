@@ -1,25 +1,44 @@
 package com.example.mayday22;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.sql.Ref;
 
 public class MedicSignUpActivity extends AppCompatActivity {
     EditText id, password, name, organization;
-    Button signUp;
+    Button signUp, upload;
+    ProgressBar uploadProgressBar, signUpBar;
     boolean confirmFlag;
     private DatabaseReference mDatabase;
+    private StorageReference mStorageRef;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri uri;
+    private String urlLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +50,28 @@ public class MedicSignUpActivity extends AppCompatActivity {
         organization=findViewById(R.id.organization);
         signUp=findViewById(R.id.signUp);
         confirmFlag=true;
+        upload = findViewById(R.id.uploadButton);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mStorageRef = FirebaseStorage.getInstance().getReference("medicImages");
+        uploadProgressBar = findViewById(R.id.uploadbar);
+        signUpBar = findViewById(R.id.signUpBar);
 
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upload.setVisibility(View.INVISIBLE);
+                uploadProgressBar.setVisibility(View.VISIBLE);
+                Upload();
+
+            }
+        });
 
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                signUp.setVisibility(View.INVISIBLE);
+                signUpBar.setVisibility(View.VISIBLE);
                 validateUser();
 
 
@@ -86,8 +120,69 @@ public class MedicSignUpActivity extends AppCompatActivity {
                     medic.setName(nameTemp);
                     medic.setPassword(passwordTemp);
                     medic.setOrganization(organizationTemp);
+                    medic.setIdUrl(urlLink);
                     mDatabase.child("medics").child(idTemp).child(passwordTemp).setValue(medic);
+                    signUp.setVisibility(View.VISIBLE);
+                    signUpBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(), "הנתונים נשמרו בהצלחה", Toast.LENGTH_SHORT).show();
                 }
+    }
+    public void Upload(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData()!=null) {
+            uri = data.getData();
+            fileExtension(uri);
+            uploadFile(uri);
+        }
+    }
+    public String fileExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+    public void uploadFile(Uri uri){
+        StorageReference ref = mStorageRef.child(System.currentTimeMillis()+"."+fileExtension(uri));
+
+        ref.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        Task<Uri> downloadUrlTask = taskSnapshot.getStorage().getDownloadUrl();
+                        downloadUrlTask.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                urlLink = uri.toString();
+                            }
+                        });
+
+
+                        //Uri downloadUrl = downloadUrlTask.getResult();
+
+                        uploadProgressBar.setVisibility(View.INVISIBLE);
+                        upload.setVisibility(View.VISIBLE);
+                        upload.setClickable(false);
+                        Toast.makeText(getApplicationContext(), "תמונה נשמרה במאגר בהצלחה", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "תמונה לא נשמרה במאגר בהצלחה", Toast.LENGTH_SHORT).show();
+                        // ...
+                    }
+                });
+
     }
 }
