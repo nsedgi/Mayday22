@@ -89,6 +89,8 @@ public class UserSignUpActivity extends AppCompatActivity {
             newUser.setName(nameTemp);
             newUser.setPassword(passwordTemp);
             newUser.setMedInfo(medInfoTemp);
+            newUser.setLatitude(0.0);
+            newUser.setLongitude(0.0);
             mDatabase.child(idTemp).child(passwordTemp).setValue(newUser);
 
             Toast.makeText(getApplicationContext(), "נתונים נשמרו בהצלחה!", Toast.LENGTH_LONG).show();

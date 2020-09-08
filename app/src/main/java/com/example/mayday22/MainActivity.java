@@ -1,9 +1,15 @@
 package com.example.mayday22;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar progressBar;
     EditText id, password;
     DatabaseReference mDatabase, uDatabase, uDatabaseP;
+    private int PERMISSIONS_CODE=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +42,33 @@ public class MainActivity extends AppCompatActivity {
         isMedic = findViewById(R.id.checkMedic);
         progressBar = findViewById(R.id.progressBar);
 
+
         mDatabase = FirebaseDatabase.getInstance().getReference().child("medics");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("users");
 
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) +
+        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CALL_PHONE) ||
+            ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
+            ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("דרושות הרשאות");
+                builder.setMessage("יש לאשר את ההרשאות הבאות: מיקום, טלפון. ההרשאות ישמשו אך ורק בשביל שימוש באפליקציה.");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                                Manifest.permission.CALL_PHONE,
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                        }, PERMISSIONS_CODE);
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+
+        }
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "שם המשתמש או הסיסמה לא תקינים!", Toast.LENGTH_LONG).show();
                 }
             }
-            private void validatePasswordMedic(String idTemp) {
+            private void validatePasswordMedic(final String idTemp) {
                 final String passwordTemp = password.getText().toString();
                 mDatabase.child(idTemp).child(passwordTemp).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -152,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "ברוך הבא", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.INVISIBLE);
                             signIn.setVisibility(View.VISIBLE);
-                            moveActivityMedic();
+                            moveActivityMedic(idTemp, passwordTemp);
                         }
                         else{
                             progressBar.setVisibility(View.INVISIBLE);
@@ -195,8 +226,10 @@ public class MainActivity extends AppCompatActivity {
         moveToHomeScreen.putExtra("lastPassword", passwordTemp);
         startActivity(moveToHomeScreen);
     }
-    public void moveActivityMedic(){
-        Intent moveToHomeScreen =  new Intent(this, MedicHomeScreenActivity.class);
+    public void moveActivityMedic(String idTemp, String passwordTemp){
+        Intent moveToHomeScreen =  new Intent(this, MedicHomeScreenActivity2.class);
+        moveToHomeScreen.putExtra("lastId", idTemp);
+        moveToHomeScreen.putExtra("lastPassword", passwordTemp);
         startActivity(moveToHomeScreen);
     }
 }

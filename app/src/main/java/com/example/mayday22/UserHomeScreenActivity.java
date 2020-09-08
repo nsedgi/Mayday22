@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class UserHomeScreenActivity extends AppCompatActivity {
+    private int PHONE_PERMISSION_CODE=1;
     TextView dialAmbulance, title, userMedInfo;
     ImageView dialAmbulanceIcon, distressCall;
     DatabaseReference uDatabase;
@@ -35,15 +37,15 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         userMedInfo = findViewById(R.id.medInfo);
         distressCall = findViewById(R.id.panicButton);
         Intent intent = getIntent();
-        String id = intent.getStringExtra("lastId");
-        String password = intent.getStringExtra("lastPassword");
+        final String id = intent.getStringExtra("lastId");
+        final String password = intent.getStringExtra("lastPassword");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child(password);
         getUserInfo();
 
         distressCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                distressCall();
+                distressCall(id, password);
             }
         });
 
@@ -55,7 +57,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:"+101));
-                if (ActivityCompat.checkSelfPermission(UserHomeScreenActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(UserHomeScreenActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
@@ -63,13 +65,33 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    return;
+                }else{
+                    requestPhonePermission();
+
                 }
                 startActivity(callIntent);
             }
         });
 
 
+    }
+
+    private void requestPhonePermission() {
+
+            ActivityCompat.requestPermissions(UserHomeScreenActivity.this,new String[]{Manifest.permission.CALL_PHONE}, PHONE_PERMISSION_CODE);
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode==PHONE_PERMISSION_CODE){
+            if(grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(getApplicationContext(), "גישה אושרה", Toast.LENGTH_SHORT).show();
+            }
+            else
+                Toast.makeText(getApplicationContext(), "בעיה בהרשאת גישה", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getUserInfo(){
@@ -90,8 +112,10 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
 
     }
-    public void distressCall(){
+    public void distressCall(String id, String password){
         Intent moveToDistressCall =  new Intent(this, UserDistressActivity.class);
+        moveToDistressCall.putExtra("lastId", id);
+        moveToDistressCall.putExtra("lastPassword", password);
         startActivity(moveToDistressCall);
 
     }

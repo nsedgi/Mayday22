@@ -5,36 +5,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#DDF2FA">
 
-    <TextView
-        android:id="@+id/titleHelp"
-        android:layout_width="152dp"
-        android:layout_height="31dp"
-        android:text="החזק מעמד - עזרה בדרך"
-        map:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        map:layout_constraintEnd_toEndOf="parent"
-        map:layout_constraintHorizontal_bias="0.498"
-        map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toTopOf="parent"
-        map:layout_constraintVertical_bias="0.584" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
-        android:layout_width="315dp"
-        android:layout_height="311dp"
+        android:layout_width="191dp"
+        android:layout_height="197dp"
+        android:layout_marginBottom="320dp"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
-        map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toTopOf="parent">
+
+        map:layout_constraintHorizontal_bias="0.427"
+        map:layout_constraintStart_toStartOf="parent">
 
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="315dp"
-            android:layout_height="316dp"
-            tools:context=".UserDistressActivity" />
     </FrameLayout>
 
     <Button
@@ -46,5 +32,14 @@
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="190dp"
+        android:layout_height="193dp"
+        tools:context=".UserDistressActivity"
+        tools:layout_editor_absoluteX="95dp"
+        tools:layout_editor_absoluteY="214dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
