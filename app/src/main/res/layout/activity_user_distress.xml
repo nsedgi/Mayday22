@@ -13,12 +13,11 @@
         android:id="@+id/frameLayout"
         android:layout_width="191dp"
         android:layout_height="197dp"
-        android:layout_marginBottom="320dp"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
 
-        map:layout_constraintHorizontal_bias="0.427"
-        map:layout_constraintStart_toStartOf="parent">
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent">
 
 
     </FrameLayout>
@@ -38,8 +37,10 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="190dp"
         android:layout_height="193dp"
-        tools:context=".UserDistressActivity"
-        tools:layout_editor_absoluteX="95dp"
-        tools:layout_editor_absoluteY="214dp" />
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        tools:context=".UserDistressActivity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

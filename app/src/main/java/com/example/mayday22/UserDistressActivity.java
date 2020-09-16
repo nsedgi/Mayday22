@@ -38,6 +38,7 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
     FusedLocationProviderClient fusedLocationProviderClient;
     GoogleMap googleMap2;
     private DatabaseReference mDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +49,6 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child(password);
 
         method();
-
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -111,8 +111,19 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
             });
         }
     }
+
     private void fetchLastLocation() {
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override

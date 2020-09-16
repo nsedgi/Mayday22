@@ -2,6 +2,25 @@ package com.example.mayday22;
 
 public class Medic {
     private String Id, name, password, organization, idUrl;
+    private double latitude=0.0, longitude=0.0;
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+
 
     public String getId() {
         return Id;

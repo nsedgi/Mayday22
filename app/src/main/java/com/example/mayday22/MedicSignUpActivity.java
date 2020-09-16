@@ -39,6 +39,7 @@ public class MedicSignUpActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri uri;
     private String urlLink;
+    private int urlFlag=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +121,10 @@ public class MedicSignUpActivity extends AppCompatActivity {
                     medic.setName(nameTemp);
                     medic.setPassword(passwordTemp);
                     medic.setOrganization(organizationTemp);
+                    if(urlFlag ==1)
                     medic.setIdUrl(urlLink);
+                    else
+                        medic.setIdUrl("");
                     mDatabase.child("medics").child(idTemp).child(passwordTemp).setValue(medic);
                     signUp.setVisibility(View.VISIBLE);
                     signUpBar.setVisibility(View.INVISIBLE);
@@ -172,6 +176,7 @@ public class MedicSignUpActivity extends AppCompatActivity {
                         upload.setVisibility(View.VISIBLE);
                         upload.setClickable(false);
                         Toast.makeText(getApplicationContext(), "תמונה נשמרה במאגר בהצלחה", Toast.LENGTH_SHORT).show();
+                        urlFlag=1;
 
                     }
                 })
