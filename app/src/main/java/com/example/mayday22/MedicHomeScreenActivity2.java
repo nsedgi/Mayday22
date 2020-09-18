@@ -54,7 +54,6 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         id = intent.getStringExtra("lastId");
         password = intent.getStringExtra("lastPassword");
         medicTrack = new MedicTrack();
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("medics").child(id).child(password);
         avDatabase = FirebaseDatabase.getInstance().getReference().child("medic locations");
         MapsInitializer.initialize(this);
@@ -62,6 +61,23 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        avDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                maxId = dataSnapshot.getChildrenCount();
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         getMedicInfo();
         method();
     }
@@ -160,23 +176,6 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
     }
 
     private void setAvailableMedic() {
-        avDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                    maxId = dataSnapshot.getChildrenCount();
-
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        maxId++;
         medicTrack.setLat(lat);
         medicTrack.setLng(lng);
         medicTrack.setId(id);

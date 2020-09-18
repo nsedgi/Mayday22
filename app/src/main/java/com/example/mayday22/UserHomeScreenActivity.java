@@ -117,6 +117,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         moveToDistressCall.putExtra("lastId", id);
         moveToDistressCall.putExtra("lastPassword", password);
         startActivity(moveToDistressCall);
+        UserHomeScreenActivity.this.finish();
 
     }
 }

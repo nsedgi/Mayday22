@@ -1,5 +1,6 @@
 package com.example.mayday22;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -25,19 +26,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.List;
 
 public class UserDistressActivity extends FragmentActivity implements OnMapReadyCallback {
     LocationManager locationManager;
-    LocationListener locationListener;
-    Location userLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
     GoogleMap googleMap2;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase, avDatabase;
+    private long maxId;
+    double lat, lng;
+    double closestFlag, closestLat, closestLng, closestSum, closestCounter=19000.0;
+    int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +53,41 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         final String id = intent.getStringExtra("lastId");
         final String password = intent.getStringExtra("lastPassword");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child(password);
-
-        method();
-
+        avDatabase = FirebaseDatabase.getInstance().getReference().child("medic locations");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        method();
+
+    }
+
+    private void CalculateClosestMedic() {
+
+        avDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                maxId = dataSnapshot.getChildrenCount();
+                System.out.println("maxId:" + maxId);
+                closestSum=lat+lng;
+                for(i = 1; i<maxId; ++i){
+                    closestLat = (double) dataSnapshot.child(String.valueOf(i)).child("lat").getValue();
+                    closestLng = (double) dataSnapshot.child(String.valueOf(i)).child("lng").getValue();
+                    closestCounter = closestLat+closestLng;
+                    if(closestCounter<closestSum)
+                        closestFlag=i;
+                }
+                        System.out.println("closest courdinates:" + closestFlag);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void method() {
@@ -73,25 +106,28 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    double lat, lng;
+
                     lat = location.getLatitude();
                     lng = location.getLongitude();
                     LatLng userLatLong = new LatLng(lat, lng);
                     mDatabase.child("latitude").setValue(lat);
                     mDatabase.child("longitude").setValue(lng);
+                    System.out.println("latitude:" + lat + "longitude: " + lng);
                     Geocoder geo = new Geocoder(getApplicationContext());
                     try {
                         List<Address> addressList = geo.getFromLocation(lat, lng, 1);
-                        String str;
+                       /* String str;
                         str = addressList.get(0).getLocality();
                         googleMap2.addMarker(new MarkerOptions().position(userLatLong).title(str));
-                        googleMap2.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLong, 15.0f));
+                        googleMap2.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLong, 15.0f));*/
                         locationManager.removeUpdates(this);
+
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
+                    CalculateClosestMedic();
                 }
 
                 @Override
@@ -112,78 +148,10 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         }
     }
 
-    private void fetchLastLocation() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location!=null){
-                    userLocation = location;
-                    Toast.makeText(getApplicationContext(),userLocation.getLatitude()+""+userLocation.getLongitude(),Toast.LENGTH_SHORT).show();
-                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                            .findFragmentById(R.id.map);
-                    assert mapFragment != null;
-                    mapFragment.getMapAsync(UserDistressActivity.this);
-                }
-            }
-        });
-    }
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
+   @Override
+   public void onMapReady(GoogleMap googleMap) {
         this.googleMap2 = googleMap;
-
-  /*      final LatLng userLatLong = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions().position(userLatLong).title("אתה נמצא כאן");
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(userLatLong));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLong, 5));
-        googleMap.addMarker(markerOptions);
-        locationManager= (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);*/
-
-       /* locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                userLocation=location;
-
-
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };*/
-    }
+   }
 
 }
