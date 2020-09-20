@@ -13,11 +13,8 @@
         android:id="@+id/frameLayout"
         android:layout_width="90dp"
         android:layout_height="51dp"
-        map:layout_constraintBottom_toBottomOf="parent"
-        map:layout_constraintEnd_toEndOf="parent"
 
-        map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toTopOf="parent">
+        >
 
 
     </FrameLayout>
@@ -29,18 +26,33 @@
         android:text="בטל"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.498"
         map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+        map:layout_constraintTop_toBottomOf="@+id/waitTitle"
+        map:layout_constraintVertical_bias="0.71" />
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="23dp"
         android:layout_height="4dp"
+        tools:context=".UserDistressActivity"
+        tools:layout_editor_absoluteX="7dp"
+        tools:layout_editor_absoluteY="643dp" />
+
+    <EditText
+        android:id="@+id/waitTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="אנא המתן. מאתר חובש..."
+        android:textSize="30sp"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.491"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent"
-        tools:context=".UserDistressActivity" />
+        map:layout_constraintVertical_bias="0.317" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

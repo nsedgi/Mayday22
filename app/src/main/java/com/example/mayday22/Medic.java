@@ -3,6 +3,23 @@ package com.example.mayday22;
 public class Medic {
     private String Id, name, password, organization, idUrl;
     private double latitude=0.0, longitude=0.0;
+    String tripleshake1 = "false", tripleshake3 = "false";
+
+    public String getTripleshake1() {
+        return tripleshake1;
+    }
+
+    public void setTripleshake1(String tripleshake1) {
+        this.tripleshake1 = tripleshake1;
+    }
+
+    public String getTripleshake3() {
+        return tripleshake3;
+    }
+
+    public void setTripleshake3(String tripleshake3) {
+        this.tripleshake3 = tripleshake3;
+    }
 
     public double getLatitude() {
         return latitude;

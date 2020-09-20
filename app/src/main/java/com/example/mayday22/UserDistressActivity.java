@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,11 +40,13 @@ import java.util.List;
 public class UserDistressActivity extends FragmentActivity implements OnMapReadyCallback {
     LocationManager locationManager;
     GoogleMap googleMap2;
-    private DatabaseReference mDatabase, avDatabase;
+    private DatabaseReference mDatabase, avDatabase, medDatabase;
     private long maxId;
     double lat, lng;
-    double closestFlag, closestLat, closestLng, closestSum, closestCounter=19000.0;
-    int i;
+    double closestLat, closestLng, closestSum, closestCounter=19000.0;
+    private String medicId, medicPassword;
+    int closestFlag, i;
+    TextView waitTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         final String password = intent.getStringExtra("lastPassword");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child(password);
         avDatabase = FirebaseDatabase.getInstance().getReference().child("medic locations");
+        medDatabase = FirebaseDatabase.getInstance().getReference().child("medics");
+        waitTitle = findViewById(R.id.waitTitle);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -77,9 +82,14 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
                     closestCounter = closestLat+closestLng;
                     if(closestCounter<closestSum)
                         closestFlag=i;
-                }
-                        System.out.println("closest courdinates:" + closestFlag);
+                    System.out.println("closest courdinates:" + closestFlag);
 
+                }
+                medicId = (String) dataSnapshot.child(String.valueOf(closestFlag)).child("id").getValue();
+                medicPassword = (String) dataSnapshot.child(String.valueOf(closestFlag)).child("password").getValue();
+                waitTitle.setText("חובש בדרך אלייך!");
+                System.out.println(medicId + medicPassword);
+                sendRequest();
             }
 
             @Override
@@ -89,6 +99,11 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         });
 
     }
+
+    public void sendRequest() {
+        medDatabase.child(medicId).child(medicPassword).child("tripleshake1").setValue("true");
+    }
+
 
     private void method() {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);

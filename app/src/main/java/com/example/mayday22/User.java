@@ -10,6 +10,7 @@ public class User {
     private String medInfo;
     private double latitude;
     private double longitude;
+    boolean tripleshake2;
 
     public double getLatitude() {
         return latitude;

@@ -5,7 +5,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -107,6 +109,10 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
                 nameText.setText(name);
                 organizationText.setText(organization);
                 linkText.setText(url);
+                String tripleShake1 = String.valueOf(dataSnapshot.child("tripleshake1").getValue());
+                if(tripleShake1.equals("true")){
+                    ConfirmDialog();
+                }
             }
 
             @Override
@@ -114,6 +120,25 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
 
             }
         });
+
+    }
+
+    private void ConfirmDialog() {
+        AlertDialog.Builder confirm1 = new AlertDialog.Builder(MedicHomeScreenActivity2.this);
+        confirm1.setTitle("משתמש זקוק לעזרתך!");
+        confirm1.setMessage("משתמש בקרבת מקום זקוק לעזרה רפואית דחופה. האם אתה יכול להיענות לה?");
+        confirm1.setPositiveButton("אני בדרך!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        confirm1.setNegativeButton("לא יכול", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDatabase.child("tripleshake1").setValue("false");
+            }
+        });confirm1.create().show();
 
     }
 
