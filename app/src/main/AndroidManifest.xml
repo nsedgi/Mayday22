@@ -42,9 +42,6 @@
         <activity
             android:name=".UserDistressActivity"
             android:label="@string/title_activity_user_distress" />
-        <activity android:name=".DistressMedicActivity2" />
-        <activity android:name=".DistressMedicActivity" />
-        <activity android:name=".MedicHomeScreenActivity" />
         <activity android:name=".UserHomeScreenActivity" />
         <activity android:name=".MedicSignUpActivity" />
         <activity android:name=".UserSignUpActivity" />

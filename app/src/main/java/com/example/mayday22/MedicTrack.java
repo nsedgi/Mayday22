@@ -2,7 +2,15 @@ package com.example.mayday22;
 
 public class MedicTrack {
     double lat, lng;
-    String id, password;
+    String id, password, track;
+
+    public String getTrack() {
+        return track;
+    }
+
+    public void setTrack(String track) {
+        this.track = track;
+    }
 
     public double getLat() {
         return lat;

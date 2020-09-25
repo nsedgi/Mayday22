@@ -11,8 +11,8 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
 
-        android:layout_width="365dp"
-        android:layout_height="232dp"
+        android:layout_width="363dp"
+        android:layout_height="256dp"
         android:layout_marginTop="64dp"
         android:orientation="vertical"
         map:layout_constraintEnd_toEndOf="parent"
@@ -86,6 +86,12 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:text="link" />
+
+        <Button
+            android:id="@+id/zeroIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="אפס" />
     </LinearLayout>
 
     <fragment

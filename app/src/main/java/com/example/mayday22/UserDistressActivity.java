@@ -76,20 +76,24 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
                 maxId = dataSnapshot.getChildrenCount();
                 System.out.println("maxId:" + maxId);
                 closestSum=lat+lng;
+                double calculate=12000;
                 for(i = 1; i<maxId; ++i){
                     closestLat = (double) dataSnapshot.child(String.valueOf(i)).child("lat").getValue();
                     closestLng = (double) dataSnapshot.child(String.valueOf(i)).child("lng").getValue();
                     closestCounter = closestLat+closestLng;
-                    if(closestCounter<closestSum)
-                        closestFlag=i;
+                    if(closestCounter+closestSum<calculate){
+                        calculate = closestCounter+closestSum;
+                        if(dataSnapshot.child(String.valueOf(i)).child("track").getValue()!="busy")
+                        closestFlag=i;}
                     System.out.println("closest courdinates:" + closestFlag);
 
                 }
                 medicId = (String) dataSnapshot.child(String.valueOf(closestFlag)).child("id").getValue();
                 medicPassword = (String) dataSnapshot.child(String.valueOf(closestFlag)).child("password").getValue();
-                waitTitle.setText("חובש בדרך אלייך!");
+
                 System.out.println(medicId + medicPassword);
                 sendRequest();
+                if(dataSnapshot.child(String.valueOf(closestFlag)).child("password").child("tripleshake1").getValue()=="refused") CalculateClosestMedic();
             }
 
             @Override
@@ -100,8 +104,17 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
 
     }
 
+    public void SendLocation() {
+        medDatabase.child(medicId).child(medicPassword).child("userLatitude").setValue(lat);
+        medDatabase.child(medicId).child(medicPassword).child("userLongitude").setValue(lng);
+        medDatabase.child(medicId).child(medicPassword).child("tripleshake1").setValue("sent");
+    }
+
     public void sendRequest() {
         medDatabase.child(medicId).child(medicPassword).child("tripleshake1").setValue("true");
+        medDatabase.child(medicId).child(medicPassword).child("userLatitude").setValue(lat);
+        medDatabase.child(medicId).child(medicPassword).child("userLongitude").setValue(lng);
+        waitTitle.setText("חובש בדרך אלייך!");
     }
 
 
@@ -143,6 +156,9 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
                     }
 
                     CalculateClosestMedic();
+
+
+
                 }
 
                 @Override

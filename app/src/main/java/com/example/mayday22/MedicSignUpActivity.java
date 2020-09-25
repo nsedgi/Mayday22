@@ -129,7 +129,14 @@ public class MedicSignUpActivity extends AppCompatActivity {
                     signUp.setVisibility(View.VISIBLE);
                     signUpBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getApplicationContext(), "הנתונים נשמרו בהצלחה", Toast.LENGTH_SHORT).show();
+                    moveActivityMedic(idTemp, passwordTemp);
                 }
+    }
+    public void moveActivityMedic(String idTemp, String passwordTemp){
+        Intent moveToHomeScreen =  new Intent(this, MedicHomeScreenActivity2.class);
+        moveToHomeScreen.putExtra("lastId", idTemp);
+        moveToHomeScreen.putExtra("lastPassword", passwordTemp);
+        startActivity(moveToHomeScreen);
     }
     public void Upload(){
         Intent intent = new Intent();

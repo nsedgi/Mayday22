@@ -2,8 +2,24 @@ package com.example.mayday22;
 
 public class Medic {
     private String Id, name, password, organization, idUrl;
-    private double latitude=0.0, longitude=0.0;
+    private double latitude=0.0, longitude=0.0, userLatitude, userLongitude;
     String tripleshake1 = "false", tripleshake3 = "false";
+
+    public double getUserLatitude() {
+        return userLatitude;
+    }
+
+    public void setUserLatitude(double userLatitude) {
+        this.userLatitude = userLatitude;
+    }
+
+    public double getUserLongitude() {
+        return userLongitude;
+    }
+
+    public void setUserLongitude(double userLongitude) {
+        this.userLongitude = userLongitude;
+    }
 
     public String getTripleshake1() {
         return tripleshake1;
