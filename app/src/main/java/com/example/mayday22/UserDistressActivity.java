@@ -14,6 +14,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +35,7 @@ import java.util.List;
 public class UserDistressActivity extends FragmentActivity implements OnMapReadyCallback {
     LocationManager locationManager;
     GoogleMap googleMap2;
+    Button back;
     private DatabaseReference mDatabase, avDatabase, medDatabase;
     private long maxId;
     double lat, lng;
@@ -40,7 +43,6 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
     private String medicId, medicPassword;
     int closestFlag, i;
     TextView waitTitle;
-    String medInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +51,17 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         Intent intent = getIntent();
         final String id = intent.getStringExtra("lastId");
         final String password = intent.getStringExtra("lastPassword");
-        String medInfo = intent.getStringExtra("lastMedInfo");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child(password);
         avDatabase = FirebaseDatabase.getInstance().getReference().child("medic locations");
         medDatabase = FirebaseDatabase.getInstance().getReference().child("medics");
         waitTitle = findViewById(R.id.waitTitle);
+        back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDistressActivity.this.finish();
+            }
+        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -74,7 +82,7 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
                 System.out.println("maxId:" + maxId);
                 closestSum=lat+lng;
                 double calculate=12000;
-                for(i = 1; i<=maxId; ++i){
+                for(i = 1; i<=maxId&&dataSnapshot.child(String.valueOf(i)).exists(); ++i){
 
                     closestLat = (double) dataSnapshot.child(String.valueOf(i)).child("lat").getValue();
                     closestLng = (double) dataSnapshot.child(String.valueOf(i)).child("lng").getValue();
@@ -108,7 +116,6 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         medDatabase.child(medicId).child(medicPassword).child("tripleshake1").setValue("true");
         medDatabase.child(medicId).child(medicPassword).child("userLatitude").setValue(lat);
         medDatabase.child(medicId).child(medicPassword).child("userLongitude").setValue(lng);
-        medDatabase.child(medicId).child(medicPassword).child("userInfo").setValue(medInfo);
         waitTitle.setText("חובש בדרך אלייך!");
     }
 

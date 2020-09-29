@@ -38,8 +38,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapReadyCallback {
-    TextView nameText, idText, organizationText, linkText, userTextInfo;
-    Button zero, watchInfo;
+    TextView nameText, idText, organizationText, linkText;
+    Button zero;
     double lat, lng, userLat, userLng, medicLat, medicLng;
     String name, id, organization, url, password, userMedInfo;
     DatabaseReference mDatabase, avDatabase;
@@ -59,11 +59,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         idText=findViewById(R.id.id);
         organizationText=findViewById(R.id.organization);
         linkText=findViewById(R.id.link);
-        userTextInfo = findViewById(R.id.userInfoText);
         zero=findViewById(R.id.zeroIn);
-        watchInfo = findViewById(R.id.zeroIn);
-        watchInfo.setVisibility(View.GONE);
-        userTextInfo.setVisibility(View.GONE);
         Intent intent = getIntent();
         id = intent.getStringExtra("lastId");
         password = intent.getStringExtra("lastPassword");
@@ -83,26 +79,12 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         zero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                watchInfo.setVisibility(View.GONE);
                 getTrackNum();
                 setAvailableMedic();
                 mDatabase.child("tripleshake1").setValue("available");
             }
         });
-        watchInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userTextInfo.setText(userMedInfo);
-                userTextInfo.setVisibility(View.VISIBLE);
-            }
-        });
 
-        userTextInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userTextInfo.setVisibility(View.GONE);
-            }
-        });
     }
 
     public void getTrackNum() {
@@ -149,7 +131,6 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
                 linkText.setText(url);
                 medicLat= (double) dataSnapshot.child("latitude").getValue();
                 medicLng= (double) dataSnapshot.child("longitude").getValue();
-                userMedInfo = (String) dataSnapshot.child("userMedInfo").getValue();
                 if(dataSnapshot.child("userLatitude").exists())
                 userLat = (double) dataSnapshot.child("userLatitude").getValue();
                 if(dataSnapshot.child("userLongitude").exists())
@@ -159,7 +140,6 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
                     ConfirmDialog();
                 }
                 if(tripleShake1.equals("refused")){
-                    watchInfo.setVisibility(View.GONE);
                     dataSnapshot.child("userLatitude").getRef().removeValue();
                     dataSnapshot.child("userLongitude").getRef().removeValue();
                     avDatabase.addValueEventListener(new ValueEventListener() {
@@ -197,7 +177,6 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mDatabase.child("tripleshake1").setValue("ready");
-                watchInfo.setVisibility(View.VISIBLE);
                 DisplayTrack();
             }
         });
@@ -205,7 +184,6 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mDatabase.child("tripleshake1").setValue("refused");
-                watchInfo.setVisibility(View.GONE);
             }
         });confirm1.create().show();
 

@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,12 +24,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class UserHomeScreenActivity extends AppCompatActivity {
     private int PHONE_PERMISSION_CODE=1;
     TextView dialAmbulance, title, userMedInfo;
     ImageView dialAmbulanceIcon, distressCall;
     DatabaseReference uDatabase;
     int callFlag;
+    Button logOutButton, setUserInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +43,29 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         title=findViewById(R.id.titleMessage);
         userMedInfo = findViewById(R.id.medInfo);
         distressCall = findViewById(R.id.panicButton);
+        logOutButton = findViewById(R.id.logOutButton);
+        setUserInfo = findViewById(R.id.setUserInfo);
         Intent intent = getIntent();
         callFlag = 0; //set call flag to false as default.
         final String id = intent.getStringExtra("lastId");
         final String password = intent.getStringExtra("lastPassword");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child(password);
         getUserInfo();
+
+      logOutButton.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              UserHomeScreenActivity.this.finish();
+          }
+      });
+
+        setUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uDatabase.child("medInfo").setValue(userMedInfo.getText().toString());
+                Toast.makeText(getApplicationContext(), "מידע שונה בהצלחה!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         distressCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,12 +98,12 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     callAmbulance.setNegativeButton("לא מעוניין להתקשר.", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            distressCall(id, password, userMedInfo.toString());
+                            distressCall(id, password);
                         }
                     }); callAmbulance.create().show();
                 }
                 else
-                distressCall(id, password, userMedInfo.toString());
+                distressCall(id, password);
             }
         });
 
@@ -147,11 +168,10 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
 
     }
-    public void distressCall(String id, String password, String medInfo){
+    public void distressCall(String id, String password){
         Intent moveToDistressCall =  new Intent(this, UserDistressActivity.class);
         moveToDistressCall.putExtra("lastId", id);
         moveToDistressCall.putExtra("lastPassword", password);
-        moveToDistressCall.putExtra("lastMedInfo", medInfo);
         startActivity(moveToDistressCall);
         UserHomeScreenActivity.this.finish();
 

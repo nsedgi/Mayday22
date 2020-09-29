@@ -20,16 +20,15 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/cancel"
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="בטל"
+        android:text="חזור (לא מבטל את הקריאה)"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
-        map:layout_constraintHorizontal_bias="0.498"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toBottomOf="@+id/waitTitle"
-        map:layout_constraintVertical_bias="0.71" />
+        map:layout_constraintVertical_bias="0.762" />
 
     <fragment
         android:id="@+id/map"
@@ -50,17 +49,69 @@
         android:textSize="30sp"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
-        map:layout_constraintHorizontal_bias="0.491"
+        map:layout_constraintHorizontal_bias="0.311"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent"
-        map:layout_constraintVertical_bias="0.317" />
+        map:layout_constraintVertical_bias="0.173" />
 
     <TextView
         android:id="@+id/captions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="כמה עצות:"
-        tools:layout_editor_absoluteX="170dp"
-        tools:layout_editor_absoluteY="361dp" />
+        map:layout_constraintBottom_toTopOf="@+id/back"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.498"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/waitTitle"
+        map:layout_constraintVertical_bias="0.045" />
+
+    <LinearLayout
+        android:layout_width="373dp"
+        android:layout_height="251dp"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        map:layout_constraintBottom_toTopOf="@+id/back"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/captions"
+        map:layout_constraintVertical_bias="0.0">
+
+        <EditText
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text=" - נסה לנשום עמוק" />
+
+        <EditText
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:text="- . אם אתה מרגיש מועקה בחזה - נסה להשתעל בכל הכוח כמה שיעולים" />
+
+        <EditText
+            android:id="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:text="- אם הוכשת או נעקצת - קבע את האיבר, הירגע, והשתדל שלא לזוז" />
+
+        <EditText
+            android:id="@+id/line4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:text="- אין בושה בלבקש סיוע מהאדם הקרוב ביותר אלייך - שפר את סיכויי ההישרדות שלך!" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
