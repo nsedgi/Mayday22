@@ -136,7 +136,7 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-
+// set location for user on the map. may be used for later versions.
                     lat = location.getLatitude();
                     lng = location.getLongitude();
                     LatLng userLatLong = new LatLng(lat, lng);

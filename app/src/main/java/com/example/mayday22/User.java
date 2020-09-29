@@ -1,8 +1,6 @@
 package com.example.mayday22;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+//a class for user.
 public class User {
     private String name;
     private String user;

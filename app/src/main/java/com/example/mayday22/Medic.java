@@ -1,5 +1,5 @@
 package com.example.mayday22;
-
+//a class for medic (personal info).
 public class Medic {
     private String Id, name, password, organization, idUrl;
     private double latitude=0.0, longitude=0.0, userLatitude, userLongitude, userInfo;

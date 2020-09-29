@@ -1,5 +1,5 @@
 package com.example.mayday22;
-
+//a class for available medics.
 public class MedicTrack {
     double lat, lng;
     String id, password, track;

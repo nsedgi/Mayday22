@@ -64,7 +64,9 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         id = intent.getStringExtra("lastId");
         password = intent.getStringExtra("lastPassword");
         medicTrack = new MedicTrack();
+        //refer to own info.
         mDatabase = FirebaseDatabase.getInstance().getReference().child("medics").child(id).child(password);
+        //refer to "available medics" info.
         avDatabase = FirebaseDatabase.getInstance().getReference().child("medic locations");
         MapsInitializer.initialize(this);
         idText.setText(id);
@@ -88,6 +90,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
     }
 
     public void getTrackNum() {
+        //find all available medics. fill gaps if any.
         avDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -104,22 +107,13 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         });
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap2 = googleMap;
 
     }
     public void getMedicInfo(){
-
+// set all of the medic info on screen. add latitude and longitude. open a listener for changes in "tripleShake1".
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -140,6 +134,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
                     ConfirmDialog();
                 }
                 if(tripleShake1.equals("refused")){
+//delete medic from "available medics". also zeroes in faults of several similar id problem.
                     dataSnapshot.child("userLatitude").getRef().removeValue();
                     dataSnapshot.child("userLongitude").getRef().removeValue();
                     avDatabase.addValueEventListener(new ValueEventListener() {
@@ -170,6 +165,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
 
 
     private void ConfirmDialog() {
+        //self explanatory.
         AlertDialog.Builder confirm1 = new AlertDialog.Builder(MedicHomeScreenActivity2.this);
         confirm1.setTitle("משתמש זקוק לעזרתך!");
         confirm1.setMessage("משתמש בקרבת מקום זקוק לעזרה רפואית דחופה. האם אתה יכול להיענות לה?");
@@ -190,6 +186,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
     }
 
     public void DisplayTrack() {
+        //refer to google maps track. more readily available than in=app implementation.
         LatLng userLatLng = new LatLng(userLat, userLng);
         LatLng medicLatLng = new LatLng(medicLat, medicLng);
         if(userLatLng.latitude>-1&&userLatLng.longitude>-1) {
@@ -204,6 +201,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
 
 
     private void method() {
+        //set location on the map.
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -219,7 +217,8 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-
+//set available latitutde and longitude. set max available medics and get an id.
+// only after that set an available medic. solves most race condition problems.
                     lat = location.getLatitude();
                     lng = location.getLongitude();
                     mDatabase.child("latitude").setValue(lat);
@@ -262,6 +261,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
     }
 
     private void setAvailableMedic() {
+        //set current location info into "available medics".
         medicTrack.setLat(lat);
         medicTrack.setLng(lng);
         medicTrack.setId(id);
