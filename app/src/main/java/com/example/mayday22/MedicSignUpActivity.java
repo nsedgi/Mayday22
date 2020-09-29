@@ -27,7 +27,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.sql.Ref;
 
 public class MedicSignUpActivity extends AppCompatActivity {
     EditText id, password, name, organization;
@@ -60,7 +59,7 @@ public class MedicSignUpActivity extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upload.setVisibility(View.INVISIBLE);
+                upload.setVisibility(View.GONE);
                 uploadProgressBar.setVisibility(View.VISIBLE);
                 Upload();
 
@@ -179,7 +178,7 @@ public class MedicSignUpActivity extends AppCompatActivity {
 
                         //Uri downloadUrl = downloadUrlTask.getResult();
 
-                        uploadProgressBar.setVisibility(View.INVISIBLE);
+                        uploadProgressBar.setVisibility(View.GONE);
                         upload.setVisibility(View.VISIBLE);
                         upload.setClickable(false);
                         Toast.makeText(getApplicationContext(), "תמונה נשמרה במאגר בהצלחה", Toast.LENGTH_SHORT).show();

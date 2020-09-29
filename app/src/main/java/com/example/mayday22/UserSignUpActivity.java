@@ -14,10 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class UserSignUpActivity extends AppCompatActivity {
     private DatabaseReference mDatabase, checkUser;
@@ -61,8 +58,9 @@ public class UserSignUpActivity extends AppCompatActivity {
                     //Username exists
                     Toast.makeText(getApplicationContext(), "תעודת הזהות קיימת במערכת!", Toast.LENGTH_LONG).show();
                 }else
+                    //Username does not exist
                     setUserInfo();
-      //Username does not exist
+
             }
 
             @Override
@@ -78,13 +76,14 @@ public class UserSignUpActivity extends AppCompatActivity {
         nameTemp=name.getText().toString();
         passwordTemp=password.getText().toString();
         medInfoTemp=medInfo.getText().toString();
-
+//check vital info
         if(idTemp.length()!=9) Toast.makeText(this, "תעודת הזהות חייבת להיות בת 9 ספרות!", Toast.LENGTH_SHORT).show();
         else
         if(name.length()<=0) Toast.makeText(this, "נא להזין שם מלא", Toast.LENGTH_SHORT).show();
         else
         if (password.length()<3 || password.length()>10) Toast.makeText(this, "על הסיסמה להכיל בין 3 ל-10 תווים!", Toast.LENGTH_LONG).show();
         else {
+//add user to database as a class.
             newUser.setUser(idTemp);
             newUser.setName(nameTemp);
             newUser.setPassword(passwordTemp);
@@ -97,7 +96,7 @@ public class UserSignUpActivity extends AppCompatActivity {
             moveActivity(idTemp, passwordTemp, nameTemp);
         }
     }
-
+//move to home screen. use the id and password to extract info.
     public void moveActivity(String idTemp, String passwordTemp, String nameTemp){
         Intent moveToHomeScreen =  new Intent(UserSignUpActivity.this, UserHomeScreenActivity.class);
         moveToHomeScreen.putExtra("lastId", idTemp);

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Button signUp, signIn;
     ProgressBar progressBar;
     EditText id, password;
-    DatabaseReference mDatabase, uDatabase, uDatabaseP;
+    DatabaseReference mDatabase, uDatabase;
     private int PERMISSIONS_CODE=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

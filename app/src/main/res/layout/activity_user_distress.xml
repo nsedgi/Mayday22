@@ -55,4 +55,12 @@
         map:layout_constraintTop_toTopOf="parent"
         map:layout_constraintVertical_bias="0.317" />
 
+    <TextView
+        android:id="@+id/captions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="כמה עצות:"
+        tools:layout_editor_absoluteX="170dp"
+        tools:layout_editor_absoluteY="361dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

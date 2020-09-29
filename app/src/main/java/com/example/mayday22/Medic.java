@@ -2,8 +2,8 @@ package com.example.mayday22;
 
 public class Medic {
     private String Id, name, password, organization, idUrl;
-    private double latitude=0.0, longitude=0.0, userLatitude, userLongitude;
-    String tripleshake1 = "false", tripleshake3 = "false";
+    private double latitude=0.0, longitude=0.0, userLatitude, userLongitude, userInfo;
+    String tripleshake1 = "false";
 
     public double getUserLatitude() {
         return userLatitude;
@@ -29,14 +29,6 @@ public class Medic {
         this.tripleshake1 = tripleshake1;
     }
 
-    public String getTripleshake3() {
-        return tripleshake3;
-    }
-
-    public void setTripleshake3(String tripleshake3) {
-        this.tripleshake3 = tripleshake3;
-    }
-
     public double getLatitude() {
         return latitude;
     }
@@ -52,8 +44,6 @@ public class Medic {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
-
 
     public String getId() {
         return Id;

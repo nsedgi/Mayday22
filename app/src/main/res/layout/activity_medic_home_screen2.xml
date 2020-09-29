@@ -11,8 +11,8 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
 
-        android:layout_width="363dp"
-        android:layout_height="256dp"
+        android:layout_width="367dp"
+        android:layout_height="300dp"
         android:layout_marginTop="64dp"
         android:orientation="vertical"
         map:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +91,15 @@
             android:id="@+id/zeroIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="אפס" />
+            android:text="אפס"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/userInfoButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="צפה במידע"
+            android:visibility="visible" />
     </LinearLayout>
 
     <fragment
@@ -106,6 +114,20 @@
         map:layout_constraintTop_toBottomOf="@+id/linearLayout3"
         map:layout_constraintVertical_bias="0.491"
         tools:context=".MedicHomeScreenActivity2" />
+
+    <EditText
+        android:id="@+id/userInfoText"
+        android:layout_width="374dp"
+        android:layout_height="346dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:visibility="visible"
+        map:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        map:layout_constraintEnd_toEndOf="@+id/linearLayout3"
+        map:layout_constraintStart_toStartOf="@+id/linearLayout3"
+        map:layout_constraintTop_toTopOf="@+id/linearLayout3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

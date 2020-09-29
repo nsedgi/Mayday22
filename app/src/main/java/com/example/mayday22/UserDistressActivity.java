@@ -15,25 +15,18 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.io.Console;
 import java.io.IOException;
 import java.util.List;
 
@@ -43,10 +36,11 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
     private DatabaseReference mDatabase, avDatabase, medDatabase;
     private long maxId;
     double lat, lng;
-    double closestLat, closestLng, closestSum, closestCounter=19000.0;
+    double closestLat, closestLng, closestSum, closestCounter=19000.0; //set impossible coordinates.
     private String medicId, medicPassword;
     int closestFlag, i;
     TextView waitTitle;
+    String medInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +49,7 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         Intent intent = getIntent();
         final String id = intent.getStringExtra("lastId");
         final String password = intent.getStringExtra("lastPassword");
+        String medInfo = intent.getStringExtra("lastMedInfo");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child(password);
         avDatabase = FirebaseDatabase.getInstance().getReference().child("medic locations");
         medDatabase = FirebaseDatabase.getInstance().getReference().child("medics");
@@ -64,26 +59,31 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        method();
+
+        setLocation();
 
     }
 
     private void CalculateClosestMedic() {
-
+//add another database for available medics.
         avDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //set max available medics (medics in available databased are numerated).
                 maxId = dataSnapshot.getChildrenCount();
                 System.out.println("maxId:" + maxId);
                 closestSum=lat+lng;
                 double calculate=12000;
-                for(i = 1; i<maxId; ++i){
+                for(i = 1; i<=maxId; ++i){
+
                     closestLat = (double) dataSnapshot.child(String.valueOf(i)).child("lat").getValue();
                     closestLng = (double) dataSnapshot.child(String.valueOf(i)).child("lng").getValue();
+                    //add the coordinates to find the smallest latch between current location and medic location.
                     closestCounter = closestLat+closestLng;
                     if(closestCounter+closestSum<calculate){
                         calculate = closestCounter+closestSum;
-                        if(dataSnapshot.child(String.valueOf(i)).child("track").getValue()!="busy")
+                        if(dataSnapshot.child(String.valueOf(i)).child("track").getValue()!="refused" ||
+                                dataSnapshot.child(String.valueOf(i)).child("track").getValue() != "ready")
                         closestFlag=i;}
                     System.out.println("closest courdinates:" + closestFlag);
 
@@ -104,21 +104,16 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
 
     }
 
-    public void SendLocation() {
-        medDatabase.child(medicId).child(medicPassword).child("userLatitude").setValue(lat);
-        medDatabase.child(medicId).child(medicPassword).child("userLongitude").setValue(lng);
-        medDatabase.child(medicId).child(medicPassword).child("tripleshake1").setValue("sent");
-    }
-
     public void sendRequest() {
         medDatabase.child(medicId).child(medicPassword).child("tripleshake1").setValue("true");
         medDatabase.child(medicId).child(medicPassword).child("userLatitude").setValue(lat);
         medDatabase.child(medicId).child(medicPassword).child("userLongitude").setValue(lng);
+        medDatabase.child(medicId).child(medicPassword).child("userInfo").setValue(medInfo);
         waitTitle.setText("חובש בדרך אלייך!");
     }
 
 
-    private void method() {
+    private void setLocation() {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -144,10 +139,10 @@ public class UserDistressActivity extends FragmentActivity implements OnMapReady
                     Geocoder geo = new Geocoder(getApplicationContext());
                     try {
                         List<Address> addressList = geo.getFromLocation(lat, lng, 1);
-                       /* String str;
+                         String str;
                         str = addressList.get(0).getLocality();
                         googleMap2.addMarker(new MarkerOptions().position(userLatLong).title(str));
-                        googleMap2.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLong, 15.0f));*/
+                        googleMap2.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLong, 15.0f));
                         locationManager.removeUpdates(this);
 
 

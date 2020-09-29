@@ -13,6 +13,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,15 +38,16 @@ import java.io.IOException;
 import java.util.List;
 
 public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapReadyCallback {
-    TextView nameText, idText, organizationText, linkText;
+    TextView nameText, idText, organizationText, linkText, userTextInfo;
+    Button zero, watchInfo;
     double lat, lng, userLat, userLng, medicLat, medicLng;
-    String name, id, organization, url, password;
+    String name, id, organization, url, password, userMedInfo;
     DatabaseReference mDatabase, avDatabase;
     LocationManager locationManager;
     GoogleMap googleMap2;
     MedicTrack medicTrack;
     LatLng medicLatLong;
-    long maxId=0, currentId;
+    long maxId=0;
     int i;
 
 
@@ -56,6 +59,11 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         idText=findViewById(R.id.id);
         organizationText=findViewById(R.id.organization);
         linkText=findViewById(R.id.link);
+        userTextInfo = findViewById(R.id.userInfoText);
+        zero=findViewById(R.id.zeroIn);
+        watchInfo = findViewById(R.id.zeroIn);
+        watchInfo.setVisibility(View.GONE);
+        userTextInfo.setVisibility(View.GONE);
         Intent intent = getIntent();
         id = intent.getStringExtra("lastId");
         password = intent.getStringExtra("lastPassword");
@@ -64,21 +72,45 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         avDatabase = FirebaseDatabase.getInstance().getReference().child("medic locations");
         MapsInitializer.initialize(this);
         idText.setText(id);
+        getTrackNum();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         getMedicInfo();
-        getTrackNum();
         method();
+        mDatabase.child("tripleshake1").setValue("available");
+
+        zero.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                watchInfo.setVisibility(View.GONE);
+                getTrackNum();
+                setAvailableMedic();
+                mDatabase.child("tripleshake1").setValue("available");
+            }
+        });
+        watchInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userTextInfo.setText(userMedInfo);
+                userTextInfo.setVisibility(View.VISIBLE);
+            }
+        });
+
+        userTextInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userTextInfo.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void getTrackNum() {
         avDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            maxId = dataSnapshot.getChildrenCount();
-
-
+            for(i=0; i<=1+dataSnapshot.getChildrenCount()&&dataSnapshot.child(String.valueOf(i)).exists(); i++)
+                maxId = i;
 
 
             }
@@ -117,6 +149,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
                 linkText.setText(url);
                 medicLat= (double) dataSnapshot.child("latitude").getValue();
                 medicLng= (double) dataSnapshot.child("longitude").getValue();
+                userMedInfo = (String) dataSnapshot.child("userMedInfo").getValue();
                 if(dataSnapshot.child("userLatitude").exists())
                 userLat = (double) dataSnapshot.child("userLatitude").getValue();
                 if(dataSnapshot.child("userLongitude").exists())
@@ -126,13 +159,13 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
                     ConfirmDialog();
                 }
                 if(tripleShake1.equals("refused")){
+                    watchInfo.setVisibility(View.GONE);
                     dataSnapshot.child("userLatitude").getRef().removeValue();
                     dataSnapshot.child("userLongitude").getRef().removeValue();
                     avDatabase.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            dataSnapshot.child(String.valueOf(currentId)).getRef().removeValue();
-                            for(i=1;i<maxId;i++)
+                            for(i=1;i<=maxId;i++)
                                 if(dataSnapshot.child(String.valueOf(i)).child("id").getValue()==id)
                                     dataSnapshot.child(String.valueOf(i)).getRef().removeValue();
 
@@ -164,6 +197,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mDatabase.child("tripleshake1").setValue("ready");
+                watchInfo.setVisibility(View.VISIBLE);
                 DisplayTrack();
             }
         });
@@ -171,7 +205,7 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mDatabase.child("tripleshake1").setValue("refused");
-
+                watchInfo.setVisibility(View.GONE);
             }
         });confirm1.create().show();
 
@@ -254,29 +288,11 @@ public class MedicHomeScreenActivity2 extends FragmentActivity implements OnMapR
         medicTrack.setLng(lng);
         medicTrack.setId(id);
         medicTrack.setPassword(password);
-        addAvailableMedic();
-    }
-
-    private void addAvailableMedic() {
-
-        avDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(i = 1; i<=maxId && dataSnapshot.child(String.valueOf(i)).exists();){
-                    i++;
-                }
-                if(i==maxId)        currentId = maxId+1;
-                else currentId=i;
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        avDatabase.child(String.valueOf(currentId)).setValue(medicTrack);
-
+        avDatabase.child(String.valueOf(maxId+1)).setValue(medicTrack);
 
     }
+
+
+
+
 }
