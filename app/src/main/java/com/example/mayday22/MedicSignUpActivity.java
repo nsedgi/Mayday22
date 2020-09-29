@@ -138,6 +138,7 @@ public class MedicSignUpActivity extends AppCompatActivity {
         startActivity(moveToHomeScreen);
     }
     public void Upload(){
+        //open gallery ref.
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -149,6 +150,7 @@ public class MedicSignUpActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData()!=null) {
+            //if picture is selected and all and well.
             uri = data.getData();
             fileExtension(uri);
             uploadFile(uri);
@@ -161,7 +163,7 @@ public class MedicSignUpActivity extends AppCompatActivity {
     }
     public void uploadFile(Uri uri){
         StorageReference ref = mStorageRef.child(System.currentTimeMillis()+"."+fileExtension(uri));
-
+        //only worked as a task.
         ref.putFile(uri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
